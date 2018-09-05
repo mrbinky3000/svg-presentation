@@ -80,11 +80,17 @@ class App extends React.Component {
 
     // only show dots for the first 64 buckets.
     for (let i = 0; i < 64; i += 1) {
+      // reduce the multiplier to reduce sensitivity of the circles
       const radius = (dataArray[i] / 128.0) * 50;
 
       // this helps smooth out the shrinking dots animation. No science here, just art.
+      // we save the max radius to an array and then pick either the current radius or
+      // the radius stored in the array minus a fraction.  To shrink faster, increase the fraction.
       this.volumes[i] = Math.max(radius, (this.volumes[i] - 0.3));
       this.circles[i].setAttribute('r', this.volumes[i]);
+
+      // if you don't want to smooth out the shrinking, comment the 2 lines above and just do...
+      // this.circles[i] = radius;
 
       // our color scale goes from 0 (blue) to 100 (red)
       this.circles[i].setAttribute('fill', this.color(Math.min(100, (dataArray[i] / 128.0) * 200)));
